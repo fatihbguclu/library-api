@@ -1,0 +1,18 @@
+server:
+  servlet:
+    context-path: /api
+  port: 8080
+
+spring:
+  application:
+    name: library-api
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${POSTGRES_URL:jdbc:postgresql://127.0.0.1:5432/library_api}
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create-drop
