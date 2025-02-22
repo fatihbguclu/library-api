@@ -40,4 +40,16 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$[0].title").value("asd"));
     }
 
+    @Test
+    void shouldReturnBookById() throws Exception {
+        when(bookService.getBookById(1L))
+                .thenReturn(
+                        Book.builder().title("asd").author("asd").build()
+                );
+
+        mockMvc.perform(get("/v1/books/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("asd"))
+                .andExpect(jsonPath("$.author").value("asd"));
+    }
 }
