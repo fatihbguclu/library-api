@@ -1,5 +1,6 @@
 package com.ft.library.service.impl;
 
+import com.ft.library.exception.BookNotFoundException;
 import com.ft.library.model.entity.Book;
 import com.ft.library.repository.BookRepository;
 import com.ft.library.service.BookService;
@@ -20,7 +21,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book getBookById(long l) {
-        return bookRepository.findById(l).orElse(new Book());
+    public Book getBookById(long id) {
+        return bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book not found"));
     }
 }

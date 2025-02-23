@@ -1,5 +1,6 @@
 package com.ft.library.controller.v1;
 
+import com.ft.library.exception.BookNotFoundException;
 import com.ft.library.model.entity.Book;
 import com.ft.library.service.BookService;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ public class BookControllerTest {
     private BookService bookService;
 
     @Test
-    void shouldReturnAllBook() throws Exception {
+    void getAllBook_shouldReturnAllBook() throws Exception {
         when(bookService.getAllBook())
                 .thenReturn(
                         List.of(
@@ -45,7 +46,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void shouldReturnBookById() throws Exception {
+    void getBookById_shouldReturnBookById() throws Exception {
         when(bookService.getBookById(1L))
                 .thenReturn(
                         Book.builder().title("Clean Code").author("Robert C. Martin").build()
@@ -57,5 +58,17 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$.message").value("Success"))
                 .andExpect(jsonPath("$.data.title").value("Clean Code"))
                 .andExpect(jsonPath("$.data.author").value("Robert C. Martin"));
+    }
+
+    @Test
+    void getBookById_WhenBookNotFound_ShouldReturnErrorMessage() throws Exception {
+        when(bookService.getBookById(999L))
+                .thenThrow(new BookNotFoundException("Book not found"));
+
+        mockMvc.perform(get("/v1/books/999"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value("Error"))
+                .andExpect(jsonPath("$.message").value("Book not found"))
+                .andExpect(jsonPath("$.data").doesNotExist());
     }
 }
