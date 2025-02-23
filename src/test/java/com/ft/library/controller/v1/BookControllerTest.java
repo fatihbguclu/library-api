@@ -29,27 +29,33 @@ public class BookControllerTest {
         when(bookService.getAllBook())
                 .thenReturn(
                         List.of(
-                                Book.builder().title("asd").author("asd").build(),
-                                Book.builder().title("asd1").author("asd1").build()
+                                Book.builder().title("Clean Code").author("Robert C. Martin").build(),
+                                Book.builder().title("Effective Java").author("Joshua Bloch").build()
                         )
                 );
 
         mockMvc.perform(get("/v1/books"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(2))
-                .andExpect(jsonPath("$[0].title").value("asd"));
+                .andExpect(jsonPath("$.status").value("Success"))
+                .andExpect(jsonPath("$.message").value("Success"))
+                .andExpect(jsonPath("$.data").exists())
+                .andExpect(jsonPath("$.data.size()").value(2))
+                .andExpect(jsonPath("$.data[0].title").value("Clean Code"))
+                .andExpect(jsonPath("$.data[1].title").value("Effective Java"));
     }
 
     @Test
     void shouldReturnBookById() throws Exception {
         when(bookService.getBookById(1L))
                 .thenReturn(
-                        Book.builder().title("asd").author("asd").build()
+                        Book.builder().title("Clean Code").author("Robert C. Martin").build()
                 );
 
         mockMvc.perform(get("/v1/books/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("asd"))
-                .andExpect(jsonPath("$.author").value("asd"));
+                .andExpect(jsonPath("$.status").value("Success"))
+                .andExpect(jsonPath("$.message").value("Success"))
+                .andExpect(jsonPath("$.data.title").value("Clean Code"))
+                .andExpect(jsonPath("$.data.author").value("Robert C. Martin"));
     }
 }
