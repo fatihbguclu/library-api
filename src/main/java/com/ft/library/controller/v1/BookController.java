@@ -1,14 +1,12 @@
 package com.ft.library.controller.v1;
 
+import com.ft.library.model.dto.request.CreateBookRequest;
 import com.ft.library.model.dto.response.GenericResponse;
 import com.ft.library.model.entity.Book;
 import com.ft.library.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +27,17 @@ public class BookController {
     public ResponseEntity<GenericResponse<Book>> getBookById(@PathVariable long id) {
         Book bookById = bookService.getBookById(id);
         return ResponseEntity.ok(GenericResponse.of("Success", "Success", bookById));
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createBook(@RequestBody CreateBookRequest body) {
+        //bookService.createBook(book);
+        return ResponseEntity.ok(GenericResponse.of("Success", "Success", null));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateBook(@PathVariable long id, @RequestBody CreateBookRequest body) {
+        //bookService.updateBook(id, book);
+        return ResponseEntity.ok(GenericResponse.of("Success", "Success", null));
     }
 }

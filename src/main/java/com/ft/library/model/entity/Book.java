@@ -22,8 +22,8 @@ public class Book {
     @Column(name = "isbn")
     private String isbn;
 
-    @Column(nullable = false)
-    private String author; // TODO: Change to list of Author object
+    @Column(name = "author")
+    private String author;
 
     @Column(name = "publish_year")
     private Integer publishYear;
@@ -32,5 +32,5 @@ public class Book {
     private Integer quantityAvailable;
 
     @Column(name = "category")
-    private String category; // TODO : maybe enum or list of category
+    private String category;
 }
