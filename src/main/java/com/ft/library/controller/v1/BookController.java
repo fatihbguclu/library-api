@@ -31,7 +31,7 @@ public class BookController {
 
     @PostMapping
     public ResponseEntity<?> createBook(@RequestBody CreateBookRequest body) {
-        //bookService.createBook(book);
+        bookService.createBook(body);
         return ResponseEntity.ok(GenericResponse.of("Success", "Success", null));
     }
 

@@ -15,4 +15,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(notFoundResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<GenericResponse<?>> handleUndefinedException(RuntimeException e) {
+        GenericResponse<?> exceptionResponse = GenericResponse.of("Error", "Something Went Wrong", null);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

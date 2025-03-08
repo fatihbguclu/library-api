@@ -77,7 +77,7 @@ public class BookRepositoryTest {
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     void getAllBooks_shouldReturnAllBooks() {
         List<Book> bookList = bookRepository.findAll();
 
@@ -87,7 +87,7 @@ public class BookRepositoryTest {
     }
 
     @Test
-    @Order(3)
+    @Order(2)
     void getByIsbn_shouldReturnBook() {
         Book book = bookRepository.findBookByIsbn("9780132350884").orElse(null);
 

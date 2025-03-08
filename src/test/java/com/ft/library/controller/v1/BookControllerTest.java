@@ -1,17 +1,24 @@
 package com.ft.library.controller.v1;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ft.library.exception.BookNotFoundException;
+import com.ft.library.model.dto.request.CreateBookRequest;
 import com.ft.library.model.entity.Book;
 import com.ft.library.service.BookService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,15 +32,36 @@ public class BookControllerTest {
     @MockitoBean
     private BookService bookService;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    private Book cleanCode;
+
+    private Book effectiveJava;
+
+    @BeforeEach
+    void setup() {
+        cleanCode = Book.builder()
+                .title("Clean Code")
+                .isbn("9780132350884")
+                .author("Robert C. Martin")
+                .publishYear(2008)
+                .quantityAvailable(10)
+                .category("Programming")
+                .build();
+
+        effectiveJava = Book.builder()
+                .title("Effective Java")
+                .isbn("9780134685991")
+                .author("Joshua Bloch")
+                .publishYear(2018)
+                .quantityAvailable(5)
+                .category("Programming")
+                .build();
+    }
+
     @Test
     void getAllBook_shouldReturnAllBook() throws Exception {
-        when(bookService.getAllBook())
-                .thenReturn(
-                        List.of(
-                                Book.builder().title("Clean Code").author("Robert C. Martin").build(),
-                                Book.builder().title("Effective Java").author("Joshua Bloch").build()
-                        )
-                );
+        when(bookService.getAllBook()).thenReturn(List.of(cleanCode, effectiveJava));
 
         mockMvc.perform(get("/v1/books"))
                 .andExpect(status().isOk())
@@ -47,10 +75,7 @@ public class BookControllerTest {
 
     @Test
     void getBookById_shouldReturnBookById() throws Exception {
-        when(bookService.getBookById(1L))
-                .thenReturn(
-                        Book.builder().title("Clean Code").author("Robert C. Martin").build()
-                );
+        when(bookService.getBookById(1L)).thenReturn(cleanCode);
 
         mockMvc.perform(get("/v1/books/1"))
                 .andExpect(status().isOk())
@@ -69,6 +94,33 @@ public class BookControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value("Error"))
                 .andExpect(jsonPath("$.message").value("Book not found"))
+                .andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+    @Test
+    void createBook_shouldReturnSuccess() throws Exception {
+        mockMvc.perform(post("/v1/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(cleanCode)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("Success"))
+                .andExpect(jsonPath("$.message").value("Success"))
+                .andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+    @Test
+    void createBook_WhenServiceThrowException_ShouldReturnErrorMessage() throws Exception {
+        CreateBookRequest bookRequest = new CreateBookRequest("Clean Code", "9780132350884",
+                "Robert C. Martin", 2008, 10, "Programming");
+
+        doThrow(new RuntimeException()).when(bookService).createBook(any(CreateBookRequest.class));
+
+        mockMvc.perform(post("/v1/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(bookRequest)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.status").value("Error"))
+                .andExpect(jsonPath("$.message").value("Something Went Wrong"))
                 .andExpect(jsonPath("$.data").doesNotExist());
     }
 }
