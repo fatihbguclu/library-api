@@ -18,10 +18,9 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @WebMvcTest(BookController.class)
 public class BookControllerTest {
@@ -37,6 +36,8 @@ public class BookControllerTest {
     private Book cleanCode;
 
     private Book effectiveJava;
+
+    private CreateBookRequest createBookRequest;
 
     @BeforeEach
     void setup() {
@@ -57,6 +58,9 @@ public class BookControllerTest {
                 .quantityAvailable(5)
                 .category("Programming")
                 .build();
+
+        createBookRequest = new CreateBookRequest("Clean Code", "9780132350884",
+                "Robert C. Martin", 2008, 10, "Programming");
     }
 
     @Test
@@ -110,17 +114,38 @@ public class BookControllerTest {
 
     @Test
     void createBook_WhenServiceThrowException_ShouldReturnErrorMessage() throws Exception {
-        CreateBookRequest bookRequest = new CreateBookRequest("Clean Code", "9780132350884",
-                "Robert C. Martin", 2008, 10, "Programming");
-
         doThrow(new RuntimeException()).when(bookService).createBook(any(CreateBookRequest.class));
 
         mockMvc.perform(post("/v1/books")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(bookRequest)))
+                .content(objectMapper.writeValueAsString(createBookRequest)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.status").value("Error"))
                 .andExpect(jsonPath("$.message").value("Something Went Wrong"))
+                .andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+    @Test
+    void updateBook_shouldReturnSuccess() throws Exception {
+        mockMvc.perform(put("/v1/books/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(cleanCode)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("Success"))
+                .andExpect(jsonPath("$.message").value("Success"))
+                .andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+    @Test
+    void updateBook_WhenBookNotFound_ShouldReturnErrorMessage() throws Exception {
+        doThrow(new BookNotFoundException("Book not found")).when(bookService).updateBook(any(Long.class), any(CreateBookRequest.class));
+
+        mockMvc.perform(put("/v1/books/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(createBookRequest)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value("Error"))
+                .andExpect(jsonPath("$.message").value("Book not found"))
                 .andExpect(jsonPath("$.data").doesNotExist());
     }
 }

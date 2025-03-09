@@ -37,7 +37,7 @@ public class BookController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateBook(@PathVariable long id, @RequestBody CreateBookRequest body) {
-        //bookService.updateBook(id, book);
+        bookService.updateBook(id, body);
         return ResponseEntity.ok(GenericResponse.of("Success", "Success", null));
     }
 }
