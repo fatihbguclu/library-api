@@ -28,6 +28,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public Book getBookByIsbn(String isbn) {
+        return bookRepository.findBookByIsbn(isbn).orElseThrow(() -> new BookNotFoundException("Book not found"));
+    }
+
+    @Override
     @Transactional
     public void createBook(CreateBookRequest bookRequest) {
         Book book = Book.builder()

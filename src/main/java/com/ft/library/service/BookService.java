@@ -10,6 +10,8 @@ public interface BookService {
 
     Book getBookById(long l);
 
+    Book getBookByIsbn(String isbn);
+
     void createBook(CreateBookRequest bookRequest);
 
     void updateBook(long id, CreateBookRequest bookRequest);

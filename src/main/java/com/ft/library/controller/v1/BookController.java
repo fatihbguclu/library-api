@@ -29,6 +29,12 @@ public class BookController {
         return ResponseEntity.ok(GenericResponse.of("Success", "Success", bookById));
     }
 
+    @GetMapping("/isbn/{isbn}")
+    public ResponseEntity<GenericResponse<Book>> getBookByIsbn(@PathVariable String isbn) {
+        Book bookByIsbn = bookService.getBookByIsbn(isbn);
+        return ResponseEntity.ok(GenericResponse.of("Success", "Success", bookByIsbn));
+    }
+
     @PostMapping
     public ResponseEntity<?> createBook(@RequestBody CreateBookRequest body) {
         bookService.createBook(body);
