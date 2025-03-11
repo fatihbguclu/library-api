@@ -102,6 +102,29 @@ public class BookControllerTest {
     }
 
     @Test
+    void getBookByIsbn_shouldReturnBookByIsbn() throws Exception {
+        when(bookService.getBookByIsbn("9780132350884")).thenReturn(cleanCode);
+
+        mockMvc.perform(get("/v1/books/isbn/9780132350884"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("Success"))
+                .andExpect(jsonPath("$.message").value("Success"))
+                .andExpect(jsonPath("$.data.title").value("Clean Code"))
+                .andExpect(jsonPath("$.data.author").value("Robert C. Martin"));
+    }
+
+    @Test
+    void getBookByIsbn_WhenBookNotFound_ShouldReturnErrorMessage() throws Exception {
+        when(bookService.getBookByIsbn("fake-isbn")).thenThrow(new BookNotFoundException("Book not found"));
+
+        mockMvc.perform(get("/v1/books/isbn/fake-isbn"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value("Error"))
+                .andExpect(jsonPath("$.message").value("Book not found"))
+                .andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+    @Test
     void createBook_shouldReturnSuccess() throws Exception {
         mockMvc.perform(post("/v1/books")
                 .contentType(MediaType.APPLICATION_JSON)
