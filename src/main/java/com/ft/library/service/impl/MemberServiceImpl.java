@@ -4,10 +4,13 @@ import com.ft.library.exception.MemberAlreadyExistsException;
 import com.ft.library.exception.MemberNotFound;
 import com.ft.library.model.dto.request.CreateMemberRequest;
 import com.ft.library.model.entity.Member;
+import com.ft.library.model.enums.MembershipStatus;
 import com.ft.library.repository.MemberRepository;
 import com.ft.library.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,8 @@ public class MemberServiceImpl implements MemberService {
                 .firstName(createMemberRequest.getFirstName())
                 .lastName(createMemberRequest.getLastName())
                 .email(createMemberRequest.getEmail())
+                .membershipDate(LocalDateTime.now())
+                .membershipStatus(MembershipStatus.ACTIVE)
                 .build();
 
         memberRepository.save(newMember);
