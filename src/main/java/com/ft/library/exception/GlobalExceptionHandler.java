@@ -15,8 +15,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(notFoundResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(MemberNotFound.class)
-    public ResponseEntity<GenericResponse<?>> handleMemberNotFoundException(MemberNotFound e) {
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<GenericResponse<?>> handleMemberNotFoundException(MemberNotFoundException e) {
         GenericResponse<?> notFoundResponse = GenericResponse.of("Error", e.getMessage(), null);
         return new ResponseEntity<>(notFoundResponse, HttpStatus.NOT_FOUND);
     }

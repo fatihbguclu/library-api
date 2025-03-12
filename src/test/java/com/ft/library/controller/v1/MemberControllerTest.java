@@ -2,7 +2,7 @@ package com.ft.library.controller.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ft.library.exception.MemberAlreadyExistsException;
-import com.ft.library.exception.MemberNotFound;
+import com.ft.library.exception.MemberNotFoundException;
 import com.ft.library.model.dto.request.CreateMemberRequest;
 import com.ft.library.model.entity.Member;
 import com.ft.library.service.MemberService;
@@ -97,7 +97,7 @@ public class MemberControllerTest {
         long memberId = 1L;
 
         // When
-        when(memberService.getMemberById(memberId)).thenThrow(new MemberNotFound("Member Not Found"));
+        when(memberService.getMemberById(memberId)).thenThrow(new MemberNotFoundException("Member Not Found"));
 
         // Then
         mockMvc.perform(get("/v1/members/1"))
@@ -132,7 +132,7 @@ public class MemberControllerTest {
         CreateMemberRequest createMemberRequest = new CreateMemberRequest("Fatih", "Büyükgüçlü", "fatih@gmail.com");
 
         // When
-        doThrow(new MemberNotFound("Member Not Found")).when(memberService).updateMember(any(Long.class), any(CreateMemberRequest.class));
+        doThrow(new MemberNotFoundException("Member Not Found")).when(memberService).updateMember(any(Long.class), any(CreateMemberRequest.class));
 
         // Then
         mockMvc.perform(put("/v1/members/1")

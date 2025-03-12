@@ -1,7 +1,7 @@
 package com.ft.library.service.impl;
 
 import com.ft.library.exception.MemberAlreadyExistsException;
-import com.ft.library.exception.MemberNotFound;
+import com.ft.library.exception.MemberNotFoundException;
 import com.ft.library.model.dto.request.CreateMemberRequest;
 import com.ft.library.model.entity.Member;
 import com.ft.library.model.enums.MembershipStatus;
@@ -37,12 +37,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member getMemberById(long id) {
-        return memberRepository.findById(id).orElseThrow(() -> new MemberNotFound("Member Not Found"));
+        return memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException("Member Not Found"));
     }
 
     @Override
     public void updateMember(long id, CreateMemberRequest createMemberRequest) {
-        Member member = memberRepository.findById(id).orElseThrow(() -> new MemberNotFound("Member Not Found"));
+        Member member = memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException("Member Not Found"));
         member.setFirstName(createMemberRequest.getFirstName());
         member.setLastName(createMemberRequest.getLastName());
         member.setEmail(createMemberRequest.getEmail());
