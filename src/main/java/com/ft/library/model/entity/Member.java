@@ -34,9 +34,4 @@ public class Member {
     @Column(name = "membership_status")
     @Enumerated(EnumType.STRING)
     private MembershipStatus membershipStatus;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
-
 }

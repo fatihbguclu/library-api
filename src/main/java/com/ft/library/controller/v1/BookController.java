@@ -36,13 +36,13 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createBook(@RequestBody CreateBookRequest body) {
+    public ResponseEntity<GenericResponse<?>> createBook(@RequestBody CreateBookRequest body) {
         bookService.createBook(body);
         return ResponseEntity.ok(GenericResponse.of("Success", "Success", null));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateBook(@PathVariable long id, @RequestBody CreateBookRequest body) {
+    public ResponseEntity<GenericResponse<?>> updateBook(@PathVariable long id, @RequestBody CreateBookRequest body) {
         bookService.updateBook(id, body);
         return ResponseEntity.ok(GenericResponse.of("Success", "Success", null));
     }
