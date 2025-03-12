@@ -34,4 +34,14 @@ public class MemberServiceImpl implements MemberService {
     public Member getMemberById(long id) {
         return memberRepository.findById(id).orElseThrow(() -> new MemberNotFound("Member Not Found"));
     }
+
+    @Override
+    public void updateMember(long id, CreateMemberRequest createMemberRequest) {
+        Member member = memberRepository.findById(id).orElseThrow(() -> new MemberNotFound("Member Not Found"));
+        member.setFirstName(createMemberRequest.getFirstName());
+        member.setLastName(createMemberRequest.getLastName());
+        member.setEmail(createMemberRequest.getEmail());
+
+        memberRepository.save(member);
+    }
 }

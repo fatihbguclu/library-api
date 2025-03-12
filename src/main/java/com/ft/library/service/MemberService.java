@@ -7,4 +7,6 @@ public interface MemberService {
     void createMember(CreateMemberRequest createMemberRequest);
 
     Member getMemberById(long id);
+
+    void updateMember(long id, CreateMemberRequest createMemberRequest);
 }

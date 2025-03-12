@@ -27,4 +27,10 @@ public class MemberController {
         return ResponseEntity.ok(GenericResponse.of("Success", "Success", memberById));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<GenericResponse<?>> updateMember(@PathVariable long id, @RequestBody CreateMemberRequest createMemberRequest) {
+        memberService.updateMember(id, createMemberRequest);
+        return ResponseEntity.ok(GenericResponse.of("Success", "Success", null));
+    }
+
 }

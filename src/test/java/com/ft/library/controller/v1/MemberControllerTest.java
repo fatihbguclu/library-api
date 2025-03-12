@@ -13,10 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -101,6 +101,43 @@ public class MemberControllerTest {
 
         // Then
         mockMvc.perform(get("/v1/members/1"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value("Error"))
+                .andExpect(jsonPath("$.message").value("Member Not Found"))
+                .andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+    @Test
+    void updateMember_shouldReturnSuccess() throws Exception {
+        // Given
+        long memberId = 1L;
+        CreateMemberRequest createMemberRequest = new CreateMemberRequest("Fatih", "Büyükgüçlü", "fatih@gmail.com");
+
+        // When
+        doNothing().when(memberService).updateMember(memberId, createMemberRequest);
+
+        // Then
+        mockMvc.perform(put("/v1/members/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createMemberRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("Success"))
+                .andExpect(jsonPath("$.message").value("Success"))
+                .andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+    @Test
+    void updateMember_whenMemberNotFound_shouldReturnError() throws Exception {
+        // Given
+        CreateMemberRequest createMemberRequest = new CreateMemberRequest("Fatih", "Büyükgüçlü", "fatih@gmail.com");
+
+        // When
+        doThrow(new MemberNotFound("Member Not Found")).when(memberService).updateMember(any(Long.class), any(CreateMemberRequest.class));
+
+        // Then
+        mockMvc.perform(put("/v1/members/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createMemberRequest)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value("Error"))
                 .andExpect(jsonPath("$.message").value("Member Not Found"))
