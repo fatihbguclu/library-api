@@ -15,6 +15,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(notFoundResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(MemberNotFound.class)
+    public ResponseEntity<GenericResponse<?>> handleMemberNotFoundException(MemberNotFound e) {
+        GenericResponse<?> notFoundResponse = GenericResponse.of("Error", e.getMessage(), null);
+        return new ResponseEntity<>(notFoundResponse, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(MemberAlreadyExistsException.class)
     public ResponseEntity<GenericResponse<?>> handleMemberAlreadyExistsException(MemberAlreadyExistsException e) {
         GenericResponse<?> existsResponse = GenericResponse.of("Error", e.getMessage(), null);

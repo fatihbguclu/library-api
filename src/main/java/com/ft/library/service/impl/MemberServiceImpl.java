@@ -1,6 +1,7 @@
 package com.ft.library.service.impl;
 
 import com.ft.library.exception.MemberAlreadyExistsException;
+import com.ft.library.exception.MemberNotFound;
 import com.ft.library.model.dto.request.CreateMemberRequest;
 import com.ft.library.model.entity.Member;
 import com.ft.library.repository.MemberRepository;
@@ -27,5 +28,10 @@ public class MemberServiceImpl implements MemberService {
                 .build();
 
         memberRepository.save(newMember);
+    }
+
+    @Override
+    public Member getMemberById(long id) {
+        return memberRepository.findById(id).orElseThrow(() -> new MemberNotFound("Member Not Found"));
     }
 }

@@ -20,4 +20,11 @@ public class MemberController {
         memberService.createMember(createMemberRequest);
         return ResponseEntity.ok(GenericResponse.of("Success", "Success", null));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GenericResponse<Member>> getMemberById(@PathVariable long id) {
+        Member memberById = memberService.getMemberById(id);
+        return ResponseEntity.ok(GenericResponse.of("Success", "Success", memberById));
+    }
+
 }
