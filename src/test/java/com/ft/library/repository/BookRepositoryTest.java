@@ -43,7 +43,7 @@ public class BookRepositoryTest {
                 .category("Programming")
                 .build();
 
-        testEntityManager.persistAndFlush(cleanCode);
+        testEntityManager.persist(cleanCode);
         testEntityManager.persist(effectiveJava);
     }
 
