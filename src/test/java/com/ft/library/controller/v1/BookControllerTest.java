@@ -5,7 +5,6 @@ import com.ft.library.exception.BookNotFoundException;
 import com.ft.library.model.dto.request.CreateBookRequest;
 import com.ft.library.model.entity.Book;
 import com.ft.library.service.BookService;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

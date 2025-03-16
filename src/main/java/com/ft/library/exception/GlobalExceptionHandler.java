@@ -27,6 +27,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(existsResponse, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(BookNotAvailableException.class)
+    public ResponseEntity<GenericResponse<?>> handleBookNotAvailableException(BookNotAvailableException e) {
+        GenericResponse<?> existsResponse = GenericResponse.of("Error", e.getMessage(), null);
+        return new ResponseEntity<>(existsResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<GenericResponse<?>> handleUndefinedException(RuntimeException e) {
         GenericResponse<?> exceptionResponse = GenericResponse.of("Error", "Something Went Wrong", null);

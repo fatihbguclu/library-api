@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -32,11 +33,17 @@ public class BorrowRecord {
     @Column(name = "borrow_date")
     private LocalDateTime borrowDate;
 
+    @Column(name = "due_date")
+    private LocalDateTime dueDate;
+
     @Column(name = "return_date")
     private LocalDateTime returnDate;
 
     @Column(name = "borrow_status")
     @Enumerated(EnumType.STRING)
     private BorrowStatus borrowStatus;
+
+    @Column(name = "penalty_amount")
+    private BigDecimal penaltyAmount;
 
 }
