@@ -159,6 +159,4 @@ public class BorrowControllerTest {
                 .andExpect(jsonPath("$.data.borrowStatus").value("OVERDUE"))
                 .andExpect(jsonPath("$.data.penaltyAmount").value(3));
     }
-
-
 }
