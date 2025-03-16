@@ -33,6 +33,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(existsResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(BorrowRecordNotFound.class)
+    public ResponseEntity<GenericResponse<?>> handleBorrowRecordNotFound(BorrowRecordNotFound e) {
+        GenericResponse<?> existsResponse = GenericResponse.of("Error", e.getMessage(), null);
+        return new ResponseEntity<>(existsResponse, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<GenericResponse<?>> handleUndefinedException(RuntimeException e) {
         GenericResponse<?> exceptionResponse = GenericResponse.of("Error", "Something Went Wrong", null);

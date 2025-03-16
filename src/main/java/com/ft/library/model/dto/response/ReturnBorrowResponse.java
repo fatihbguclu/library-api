@@ -1,18 +1,20 @@
 package com.ft.library.model.dto.response;
 
 import com.ft.library.model.enums.BorrowStatus;
-import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
-@NoArgsConstructor
+@Getter
+@AllArgsConstructor
 public class ReturnBorrowResponse {
-    private LocalDate borrowDate;
-    private LocalDate returnDate;
-    private LocalDate dueDate;
+    private LocalDateTime borrowDate;
+    private LocalDateTime returnDate;
+    private LocalDateTime dueDate;
     private BorrowStatus borrowStatus;
     private BigDecimal penaltyAmount;
 }

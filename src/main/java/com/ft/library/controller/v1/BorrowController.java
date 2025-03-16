@@ -24,6 +24,7 @@ public class BorrowController {
 
     @PutMapping("/return/{borrowId}")
     public ResponseEntity<GenericResponse<ReturnBorrowResponse>> returnBook(@PathVariable long borrowId) {
-        return null;
+        ReturnBorrowResponse response = borrowService.returnBook(borrowId);
+        return ResponseEntity.ok(GenericResponse.of("Success", "Success", response));
     }
 }
