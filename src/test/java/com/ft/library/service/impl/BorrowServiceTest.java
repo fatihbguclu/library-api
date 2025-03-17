@@ -5,7 +5,7 @@ import com.ft.library.model.dto.request.CreateBorrowRequest;
 import com.ft.library.model.dto.response.CreateBorrowResponse;
 import com.ft.library.model.dto.response.ReturnBorrowResponse;
 import com.ft.library.model.entity.Book;
-import com.ft.library.model.entity.BorrowRecord;
+import com.ft.library.model.entity.BorrowEntry;
 import com.ft.library.model.entity.Member;
 import com.ft.library.model.enums.BorrowStatus;
 import com.ft.library.model.enums.MembershipStatus;
@@ -50,9 +50,7 @@ public class BorrowServiceTest {
                 .title("Clean Code")
                 .isbn("9780132350884")
                 .author("Robert C. Martin")
-                .publishYear(2008)
                 .quantityAvailable(10)
-                .category("Programming")
                 .build();
         Member member = Member.builder()
                 .id(1L)
@@ -98,9 +96,7 @@ public class BorrowServiceTest {
                 .title("Clean Code")
                 .isbn("9780132350884")
                 .author("Robert C. Martin")
-                .publishYear(2008)
                 .quantityAvailable(0)
-                .category("Programming")
                 .build();
         when(bookService.getBookById(1L)).thenReturn(book);
 
@@ -141,9 +137,7 @@ public class BorrowServiceTest {
                 .title("Clean Code")
                 .isbn("9780132350884")
                 .author("Robert C. Martin")
-                .publishYear(2008)
                 .quantityAvailable(0)
-                .category("Programming")
                 .build();
         Member member = Member.builder()
                 .id(1L)
@@ -152,7 +146,7 @@ public class BorrowServiceTest {
                 .email("fatih@gmail.com")
                 .membershipStatus(MembershipStatus.ACTIVE)
                 .build();
-        BorrowRecord borrowRecord = BorrowRecord.builder()
+        BorrowEntry borrowEntry = BorrowEntry.builder()
                 .id(borrowRecordId)
                 .book(book)
                 .member(member)
@@ -163,24 +157,24 @@ public class BorrowServiceTest {
                 .borrowStatus(BorrowStatus.ACTIVE)
                 .build();
 
-        when(borrowRepository.findById(borrowRecordId)).thenReturn(Optional.of(borrowRecord));
+        when(borrowRepository.findById(borrowRecordId)).thenReturn(Optional.of(borrowEntry));
 
         // Act
         ReturnBorrowResponse response = borrowService.returnBook(borrowRecordId);
 
         // Assert
-        assertEquals(returnDate, borrowRecord.getReturnDate());
-        assertEquals(BorrowStatus.RETURNED, borrowRecord.getBorrowStatus());
-        assertEquals(BigDecimal.ZERO, borrowRecord.getPenaltyAmount());
+        assertEquals(returnDate, borrowEntry.getReturnDate());
+        assertEquals(BorrowStatus.RETURNED, borrowEntry.getBorrowStatus());
+        assertEquals(BigDecimal.ZERO, borrowEntry.getPenaltyAmount());
 
         assertEquals(1, book.getQuantityAvailable());
         assertEquals(MembershipStatus.ACTIVE, member.getMembershipStatus());
 
-        assertEquals(borrowRecord.getBorrowDate(), response.getBorrowDate());
-        assertEquals(borrowRecord.getReturnDate(), response.getReturnDate());
-        assertEquals(borrowRecord.getDueDate(), response.getDueDate());
-        assertEquals(borrowRecord.getBorrowStatus(), response.getBorrowStatus());
-        assertEquals(borrowRecord.getPenaltyAmount(), response.getPenaltyAmount());
+        assertEquals(borrowEntry.getBorrowDate(), response.getBorrowDate());
+        assertEquals(borrowEntry.getReturnDate(), response.getReturnDate());
+        assertEquals(borrowEntry.getDueDate(), response.getDueDate());
+        assertEquals(borrowEntry.getBorrowStatus(), response.getBorrowStatus());
+        assertEquals(borrowEntry.getPenaltyAmount(), response.getPenaltyAmount());
     }
 
     @Test
@@ -204,9 +198,7 @@ public class BorrowServiceTest {
                 .title("Clean Code")
                 .isbn("9780132350884")
                 .author("Robert C. Martin")
-                .publishYear(2008)
                 .quantityAvailable(0)
-                .category("Programming")
                 .build();
         Member member = Member.builder()
                 .id(1L)
@@ -215,7 +207,7 @@ public class BorrowServiceTest {
                 .email("fatih@gmail.com")
                 .membershipStatus(MembershipStatus.ACTIVE)
                 .build();
-        BorrowRecord borrowRecord = BorrowRecord.builder()
+        BorrowEntry borrowEntry = BorrowEntry.builder()
                 .id(borrowRecordId)
                 .book(book)
                 .member(member)
@@ -226,24 +218,24 @@ public class BorrowServiceTest {
                 .borrowStatus(BorrowStatus.ACTIVE)
                 .build();
 
-        when(borrowRepository.findById(borrowRecordId)).thenReturn(Optional.of(borrowRecord));
+        when(borrowRepository.findById(borrowRecordId)).thenReturn(Optional.of(borrowEntry));
 
         // Act
         ReturnBorrowResponse response = borrowService.returnBook(borrowRecordId);
 
         // Assert
-        assertEquals(returnDate, borrowRecord.getReturnDate());
-        assertEquals(BorrowStatus.OVERDUE, borrowRecord.getBorrowStatus());
-        assertEquals(BigDecimal.valueOf(3), borrowRecord.getPenaltyAmount());
+        assertEquals(returnDate, borrowEntry.getReturnDate());
+        assertEquals(BorrowStatus.OVERDUE, borrowEntry.getBorrowStatus());
+        assertEquals(BigDecimal.valueOf(3), borrowEntry.getPenaltyAmount());
 
         assertEquals(1, book.getQuantityAvailable());
         assertEquals(MembershipStatus.ACTIVE, member.getMembershipStatus());
 
-        assertEquals(borrowRecord.getBorrowDate(), response.getBorrowDate());
-        assertEquals(borrowRecord.getReturnDate(), response.getReturnDate());
-        assertEquals(borrowRecord.getDueDate(), response.getDueDate());
-        assertEquals(borrowRecord.getBorrowStatus(), response.getBorrowStatus());
-        assertEquals(borrowRecord.getPenaltyAmount(), response.getPenaltyAmount());
+        assertEquals(borrowEntry.getBorrowDate(), response.getBorrowDate());
+        assertEquals(borrowEntry.getReturnDate(), response.getReturnDate());
+        assertEquals(borrowEntry.getDueDate(), response.getDueDate());
+        assertEquals(borrowEntry.getBorrowStatus(), response.getBorrowStatus());
+        assertEquals(borrowEntry.getPenaltyAmount(), response.getPenaltyAmount());
     }
 
 }

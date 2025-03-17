@@ -39,9 +39,7 @@ public class BookServiceImpl implements BookService {
                 .title(bookRequest.getTitle())
                 .isbn(bookRequest.getIsbn())
                 .author(bookRequest.getAuthor())
-                .publishYear(bookRequest.getPublishYear())
-                .quantityAvailable(bookRequest.getQuantityAvailable())
-                .category(bookRequest.getCategory()).build();
+                .quantityAvailable(bookRequest.getQuantityAvailable()).build();
 
         bookRepository.save(book);
     }
@@ -53,9 +51,7 @@ public class BookServiceImpl implements BookService {
         book.setTitle(bookRequest.getTitle());
         book.setIsbn(bookRequest.getIsbn());
         book.setAuthor(bookRequest.getAuthor());
-        book.setPublishYear(bookRequest.getPublishYear());
         book.setQuantityAvailable(bookRequest.getQuantityAvailable());
-        book.setCategory(bookRequest.getCategory());
 
         bookRepository.save(book);
     }

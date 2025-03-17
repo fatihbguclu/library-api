@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "borrow_records")
-public class BorrowRecord { // TODO: rename it
+@Table(name = "borrow_entries")
+public class BorrowEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

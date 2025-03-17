@@ -1,7 +1,7 @@
 package com.ft.library.repository;
 
 import com.ft.library.model.entity.Book;
-import com.ft.library.model.entity.BorrowRecord;
+import com.ft.library.model.entity.BorrowEntry;
 import com.ft.library.model.entity.Member;
 import com.ft.library.model.enums.BorrowStatus;
 import com.ft.library.model.enums.MembershipStatus;
@@ -32,7 +32,7 @@ public class BorrowRepositoryTest {
 
     private Book book;
 
-    private BorrowRecord borrowRecord;
+    private BorrowEntry borrowEntry;
 
     @BeforeEach
     void setUp() {
@@ -46,14 +46,12 @@ public class BorrowRepositoryTest {
                 .title("Clean Code")
                 .isbn("9780132350884")
                 .author("Robert C. Martin")
-                .publishYear(2008)
-                .quantityAvailable(10)
-                .category("Programming").build();
+                .quantityAvailable(10).build();
 
         testEntityManager.persist(member);
         testEntityManager.persist(book);
 
-        borrowRecord = BorrowRecord.builder()
+        borrowEntry = BorrowEntry.builder()
                 .member(member)
                 .book(book)
                 .borrowDate(LocalDateTime.now())
@@ -62,7 +60,7 @@ public class BorrowRepositoryTest {
                 .penaltyAmount(BigDecimal.ZERO)
                 .borrowStatus(BorrowStatus.ACTIVE).build();
 
-        testEntityManager.persist(borrowRecord);
+        testEntityManager.persist(borrowEntry);
     }
 
     @AfterEach
@@ -73,7 +71,7 @@ public class BorrowRepositoryTest {
     @Test
     void saveBorrowRecord_shouldPersistBorrowRecord() {
         // Given
-        BorrowRecord borrowRecord = BorrowRecord.builder()
+        BorrowEntry borrowEntry = BorrowEntry.builder()
                 .member(member)
                 .book(book)
                 .borrowDate(LocalDateTime.now())
@@ -82,10 +80,10 @@ public class BorrowRepositoryTest {
                 .penaltyAmount(BigDecimal.ZERO)
                 .borrowStatus(BorrowStatus.ACTIVE).build();
         // When
-        BorrowRecord savedRecord = borrowRepository.save(borrowRecord);
+        BorrowEntry savedRecord = borrowRepository.save(borrowEntry);
 
         // Then
-        BorrowRecord foundRecord = testEntityManager.find(BorrowRecord.class, savedRecord.getId());
+        BorrowEntry foundRecord = testEntityManager.find(BorrowEntry.class, savedRecord.getId());
         assertNotNull(foundRecord);
         assertEquals(foundRecord.getBorrowDate(), savedRecord.getBorrowDate());
         assertEquals(foundRecord.getDueDate(), savedRecord.getDueDate());
@@ -100,18 +98,18 @@ public class BorrowRepositoryTest {
     @Test
     void findBorrowRecordById_shouldReturnBorrowRecord() {
         // When
-        BorrowRecord foundRecord = borrowRepository.findById(borrowRecord.getId()).orElse(null);
+        BorrowEntry foundRecord = borrowRepository.findById(borrowEntry.getId()).orElse(null);
 
         // Then
         assertNotNull(foundRecord);
-        assertEquals(borrowRecord.getId(), foundRecord.getId());
-        assertEquals(borrowRecord.getBorrowDate(), foundRecord.getBorrowDate());
-        assertEquals(borrowRecord.getDueDate(), foundRecord.getDueDate());
-        assertEquals(borrowRecord.getReturnDate(), foundRecord.getReturnDate());
-        assertEquals(borrowRecord.getBorrowStatus(), foundRecord.getBorrowStatus());
-        assertEquals(borrowRecord.getPenaltyAmount(), foundRecord.getPenaltyAmount());
-        assertEquals(borrowRecord.getMember().getId(), foundRecord.getMember().getId());
-        assertEquals(borrowRecord.getBook().getId(), foundRecord.getBook().getId());
+        assertEquals(borrowEntry.getId(), foundRecord.getId());
+        assertEquals(borrowEntry.getBorrowDate(), foundRecord.getBorrowDate());
+        assertEquals(borrowEntry.getDueDate(), foundRecord.getDueDate());
+        assertEquals(borrowEntry.getReturnDate(), foundRecord.getReturnDate());
+        assertEquals(borrowEntry.getBorrowStatus(), foundRecord.getBorrowStatus());
+        assertEquals(borrowEntry.getPenaltyAmount(), foundRecord.getPenaltyAmount());
+        assertEquals(borrowEntry.getMember().getId(), foundRecord.getMember().getId());
+        assertEquals(borrowEntry.getBook().getId(), foundRecord.getBook().getId());
     }
 
     @Test
@@ -123,8 +121,8 @@ public class BorrowRepositoryTest {
     @Test
     void existsByBookAndMemberAndBorrowStatus_whenBorrowStatusIsDifferent_shouldReturnFalse() {
         // Given
-        borrowRecord.setBorrowStatus(BorrowStatus.RETURNED);
-        testEntityManager.persist(borrowRecord);
+        borrowEntry.setBorrowStatus(BorrowStatus.RETURNED);
+        testEntityManager.persist(borrowEntry);
         // When & Then
         assertFalse(borrowRepository.existsBorrowRecordByBookIdAndMemberIdAndBorrowStatus(book.getId(), member.getId(), BorrowStatus.ACTIVE));
     }

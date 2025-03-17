@@ -25,12 +25,6 @@ public class Book {
     @Column(name = "author")
     private String author;
 
-    @Column(name = "publish_year")
-    private Integer publishYear; // TODO : remove this
-
     @Column(name = "quantity_available")
     private Integer quantityAvailable;
-
-    @Column(name = "category")
-    private String category; // TODO : remove this
 }

@@ -29,18 +29,14 @@ public class BookRepositoryTest {
                 .title("Clean Code")
                 .isbn("9780132350884")
                 .author("Robert C. Martin")
-                .publishYear(2008)
                 .quantityAvailable(10)
-                .category("Programming")
                 .build();
 
         Book effectiveJava = Book.builder()
                 .title("Effective Java")
                 .isbn("9780134685991")
                 .author("Joshua Bloch")
-                .publishYear(2018)
                 .quantityAvailable(5)
-                .category("Programming")
                 .build();
 
         testEntityManager.persist(cleanCode);
@@ -61,9 +57,7 @@ public class BookRepositoryTest {
         assertEquals("Clean Code", book.getTitle());
         assertEquals("9780132350884", book.getIsbn());
         assertEquals("Robert C. Martin", book.getAuthor());
-        assertEquals(2008, book.getPublishYear());
         assertEquals(10, book.getQuantityAvailable());
-        assertEquals("Programming", book.getCategory());
 
         Book book2 = bookRepository.findBookById(2L).orElse(null);
 
@@ -71,9 +65,7 @@ public class BookRepositoryTest {
         assertEquals("Effective Java", book2.getTitle());
         assertEquals("9780134685991", book2.getIsbn());
         assertEquals("Joshua Bloch", book2.getAuthor());
-        assertEquals(2018, book2.getPublishYear());
         assertEquals(5, book2.getQuantityAvailable());
-        assertEquals("Programming", book2.getCategory());
     }
 
     @Test
@@ -95,9 +87,7 @@ public class BookRepositoryTest {
         assertEquals("Clean Code", book.getTitle());
         assertEquals("9780132350884", book.getIsbn());
         assertEquals("Robert C. Martin", book.getAuthor());
-        assertEquals(2008, book.getPublishYear());
         assertEquals(10, book.getQuantityAvailable());
-        assertEquals("Programming", book.getCategory());
     }
 
 }

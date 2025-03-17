@@ -45,22 +45,18 @@ public class BookControllerTest {
                 .title("Clean Code")
                 .isbn("9780132350884")
                 .author("Robert C. Martin")
-                .publishYear(2008)
                 .quantityAvailable(10)
-                .category("Programming")
                 .build();
 
         effectiveJava = Book.builder()
                 .title("Effective Java")
                 .isbn("9780134685991")
                 .author("Joshua Bloch")
-                .publishYear(2018)
                 .quantityAvailable(5)
-                .category("Programming")
                 .build();
 
         createBookRequest = new CreateBookRequest("Clean Code", "9780132350884",
-                "Robert C. Martin", 2008, 10, "Programming");
+                "Robert C. Martin", 10);
     }
 
     @Test
