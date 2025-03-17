@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @AllArgsConstructor
-public class CreateBorrowResponse {
+public class CreateBorrowResponse { // TODO : use entity instead
     private LocalDateTime borrowDate;
     private LocalDateTime dueDate;
     private BorrowStatus borrowStatus;

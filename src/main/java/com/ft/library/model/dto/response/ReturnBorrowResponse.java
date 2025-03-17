@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @AllArgsConstructor
-public class ReturnBorrowResponse {
+public class ReturnBorrowResponse { // TODO : use entity instead
     private LocalDateTime borrowDate;
     private LocalDateTime returnDate;
     private LocalDateTime dueDate;

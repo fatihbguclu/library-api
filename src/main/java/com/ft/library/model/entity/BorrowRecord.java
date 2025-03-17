@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "borrow_records")
-public class BorrowRecord {
+public class BorrowRecord { // TODO: rename it
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

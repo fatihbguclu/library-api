@@ -67,7 +67,7 @@ public class BorrowServiceTest {
         // Act
         CreateBorrowResponse response = borrowService.borrowBook(request);
 
-        // Assert
+        // Assert // TODO: book quantity available should be decreased by 1
         assertEquals(borrowDate, response.getBorrowDate());
         assertEquals(borrowDate.plusDays(7), response.getDueDate());
         assertEquals(BorrowStatus.ACTIVE, response.getBorrowStatus());
