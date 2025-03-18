@@ -2,8 +2,6 @@ package com.ft.library.service.impl;
 
 import com.ft.library.exception.BookNotAvailableException;
 import com.ft.library.model.dto.request.CreateBorrowRequest;
-import com.ft.library.model.dto.response.CreateBorrowResponse;
-import com.ft.library.model.dto.response.ReturnBorrowResponse;
 import com.ft.library.model.entity.Book;
 import com.ft.library.model.entity.BorrowEntry;
 import com.ft.library.model.entity.Member;
@@ -33,7 +31,7 @@ public class BorrowServiceImpl implements BorrowService {
 
     @Override
     @Transactional
-    public CreateBorrowResponse borrowBook(CreateBorrowRequest request) {
+    public BorrowEntry borrowBook(CreateBorrowRequest request) {
         boolean isBookAlreadyBorrowedByMember = borrowRepository.existsBorrowRecordByBookIdAndMemberIdAndBorrowStatus(
                 request.getBookId(), request.getMemberId(), BorrowStatus.ACTIVE
         );
@@ -62,14 +60,13 @@ public class BorrowServiceImpl implements BorrowService {
                 .borrowStatus(BorrowStatus.ACTIVE)
                 .penaltyAmount(BigDecimal.ZERO)
                 .build();
-
         borrowRepository.save(borrowEntry);
-        return new CreateBorrowResponse(borrowEntry.getBorrowDate(), borrowEntry.getDueDate(), BorrowStatus.ACTIVE);
+        return borrowEntry;
     }
 
     @Override
     @Transactional
-    public ReturnBorrowResponse returnBook(long borrowId) {
+    public BorrowEntry returnBook(long borrowId) {
         BorrowEntry foundBorrowRecord = borrowRepository.findById(borrowId).orElseThrow(() -> new BookNotAvailableException("Borrow Record Not Found"));
 
         LocalDateTime now = LocalDateTime.now();
@@ -83,13 +80,7 @@ public class BorrowServiceImpl implements BorrowService {
 
         foundBorrowRecord.getBook().setQuantityAvailable(foundBorrowRecord.getBook().getQuantityAvailable() + 1);
         foundBorrowRecord.setReturnDate(LocalDateTime.now());
-
         borrowRepository.save(foundBorrowRecord);
-        return new ReturnBorrowResponse(
-                foundBorrowRecord.getBorrowDate(),
-                foundBorrowRecord.getReturnDate(),
-                foundBorrowRecord.getDueDate(),
-                foundBorrowRecord.getBorrowStatus(),
-                foundBorrowRecord.getPenaltyAmount());
+        return foundBorrowRecord;
     }
 }

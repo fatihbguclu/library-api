@@ -2,8 +2,6 @@ package com.ft.library.service.impl;
 
 import com.ft.library.exception.BookNotAvailableException;
 import com.ft.library.model.dto.request.CreateBorrowRequest;
-import com.ft.library.model.dto.response.CreateBorrowResponse;
-import com.ft.library.model.dto.response.ReturnBorrowResponse;
 import com.ft.library.model.entity.Book;
 import com.ft.library.model.entity.BorrowEntry;
 import com.ft.library.model.entity.Member;
@@ -64,7 +62,7 @@ public class BorrowServiceTest {
         when(memberService.getMemberById(1L)).thenReturn(member);
 
         // Act
-        CreateBorrowResponse response = borrowService.borrowBook(request);
+        BorrowEntry response = borrowService.borrowBook(request);
 
         // Assert
         assertEquals(9, book.getQuantityAvailable());
@@ -169,7 +167,7 @@ public class BorrowServiceTest {
         when(borrowRepository.findById(borrowRecordId)).thenReturn(Optional.of(borrowEntry));
 
         // Act
-        ReturnBorrowResponse response = borrowService.returnBook(borrowRecordId);
+        BorrowEntry response = borrowService.returnBook(borrowRecordId);
 
         // Assert
         assertEquals(returnDate, borrowEntry.getReturnDate().truncatedTo(ChronoUnit.SECONDS));
@@ -230,7 +228,7 @@ public class BorrowServiceTest {
         when(borrowRepository.findById(borrowRecordId)).thenReturn(Optional.of(borrowEntry));
 
         // Act
-        ReturnBorrowResponse response = borrowService.returnBook(borrowRecordId);
+        BorrowEntry response = borrowService.returnBook(borrowRecordId);
 
         // Assert
         assertEquals(returnDate, borrowEntry.getReturnDate().truncatedTo(ChronoUnit.SECONDS));

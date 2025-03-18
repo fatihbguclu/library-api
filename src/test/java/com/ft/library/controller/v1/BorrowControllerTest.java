@@ -4,10 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ft.library.exception.BookNotAvailableException;
 import com.ft.library.exception.BorrowRecordNotFound;
 import com.ft.library.model.dto.request.CreateBorrowRequest;
-import com.ft.library.model.dto.response.CreateBorrowResponse;
-import com.ft.library.model.dto.response.ReturnBorrowResponse;
+import com.ft.library.model.entity.Book;
+import com.ft.library.model.entity.BorrowEntry;
+import com.ft.library.model.entity.Member;
 import com.ft.library.model.enums.BorrowStatus;
+import com.ft.library.model.enums.MembershipStatus;
 import com.ft.library.service.BorrowService;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -36,16 +40,47 @@ public class BorrowControllerTest {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    private static Book book;
+
+    private static Member member;
+
+    private BorrowEntry borrowEntry;
+
+    @BeforeAll
+    static void setUp() {
+        book = Book.builder()
+                .id(1L)
+                .title("Clean Code")
+                .isbn("9780132350884")
+                .author("Robert C. Martin")
+                .quantityAvailable(10).build();
+        member = Member.builder()
+                .id(1L)
+                .firstName("Fatih")
+                .lastName("Büyükgüçlü")
+                .email("fatih@gmail.com")
+                .membershipDate(LocalDateTime.now())
+                .membershipStatus(MembershipStatus.ACTIVE).build();
+    }
+
+    @BeforeEach
+    void setUpEach() {
+        borrowEntry = BorrowEntry.builder()
+                .id(1L)
+                .member(member)
+                .book(book)
+                .borrowDate(LocalDateTime.now())
+                .dueDate(LocalDateTime.now().plusDays(7))
+                .returnDate(null)
+                .penaltyAmount(BigDecimal.ZERO)
+                .borrowStatus(BorrowStatus.ACTIVE).build();
+    }
+
     @Test
     void createBorrowRequest_whenSuccess_thenReturnCreateBorrowResponse() throws Exception {
         CreateBorrowRequest request = new CreateBorrowRequest(1L, 1L);
-        CreateBorrowResponse response = new CreateBorrowResponse(
-                LocalDateTime.now(),
-                LocalDateTime.now().plusDays(7),
-                BorrowStatus.ACTIVE
-        );
 
-        when(borrowService.borrowBook(any(CreateBorrowRequest.class))).thenReturn(response);
+        when(borrowService.borrowBook(any(CreateBorrowRequest.class))).thenReturn(borrowEntry);
 
         mockMvc.perform(post("/v1/borrow")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -103,15 +138,10 @@ public class BorrowControllerTest {
     @Test
     void returnBook_whenSuccess_thenReturnReturnBorrowResponse() throws Exception {
         long borrowId = 1L;
-        ReturnBorrowResponse response = new ReturnBorrowResponse(
-                LocalDateTime.now().minusDays(7),
-                LocalDateTime.now(),
-                LocalDateTime.now().plusDays(7),
-                BorrowStatus.RETURNED,
-                BigDecimal.ZERO
-        );
+        borrowEntry.setReturnDate(LocalDateTime.now().plusDays(3));
+        borrowEntry.setBorrowStatus(BorrowStatus.RETURNED);
 
-        when(borrowService.returnBook(borrowId)).thenReturn(response);
+        when(borrowService.returnBook(borrowId)).thenReturn(borrowEntry);
 
         mockMvc.perform(put("/v1/borrow/return/1"))
                 .andExpect(status().isOk())
@@ -139,15 +169,11 @@ public class BorrowControllerTest {
     @Test
     void returnBook_whenDueDatePassed_thenReturnBorrowResponseWithPenalty() throws Exception {
         long borrowId = 1L;
-        ReturnBorrowResponse response = new ReturnBorrowResponse(
-                LocalDateTime.now().minusDays(7),
-                LocalDateTime.now(),
-                LocalDateTime.now().minusDays(3),
-                BorrowStatus.OVERDUE,
-                BigDecimal.valueOf(3)
-        );
+        borrowEntry.setReturnDate(LocalDateTime.now().plusDays(10));
+        borrowEntry.setBorrowStatus(BorrowStatus.OVERDUE);
+        borrowEntry.setPenaltyAmount(BigDecimal.valueOf(3));
 
-        when(borrowService.returnBook(borrowId)).thenReturn(response);
+        when(borrowService.returnBook(borrowId)).thenReturn(borrowEntry);
 
         mockMvc.perform(put("/v1/borrow/return/1"))
                 .andExpect(status().isOk())
