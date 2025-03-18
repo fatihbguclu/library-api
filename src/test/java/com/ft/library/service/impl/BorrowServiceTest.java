@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,7 +43,7 @@ public class BorrowServiceTest {
 
     @Test
     void borrowBook_whenValid_thenReturnResponse() {
-        LocalDateTime borrowDate = LocalDateTime.now();
+        LocalDateTime borrowDate = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         // Arrange
         CreateBorrowRequest request = new CreateBorrowRequest(1L, 1L);
         Book book = Book.builder()
@@ -67,8 +68,8 @@ public class BorrowServiceTest {
 
         // Assert
         assertEquals(9, book.getQuantityAvailable());
-        //assertEquals(borrowDate, response.getBorrowDate()); // TODO : LocalDateTime.now() wont match
-        //assertEquals(borrowDate.plusDays(7), response.getDueDate()); // TODO : LocalDateTime.now() wont match
+        assertEquals(borrowDate, response.getBorrowDate().truncatedTo(ChronoUnit.SECONDS));
+        assertEquals(borrowDate.plusDays(7).truncatedTo(ChronoUnit.SECONDS), response.getDueDate().truncatedTo(ChronoUnit.SECONDS));
         assertEquals(BorrowStatus.ACTIVE, response.getBorrowStatus());
         verify(bookService, times(1)).getBookById(1L);
         verify(memberService, times(1)).getMemberById(1L);
@@ -138,7 +139,7 @@ public class BorrowServiceTest {
     @Test
     void returnBook_whenValid_thenReturnResponse() {
         // Arrange
-        LocalDateTime returnDate = LocalDateTime.now();
+        LocalDateTime returnDate = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         long borrowRecordId = 1L;
         Book book = Book.builder()
                 .id(1L)
@@ -171,7 +172,7 @@ public class BorrowServiceTest {
         ReturnBorrowResponse response = borrowService.returnBook(borrowRecordId);
 
         // Assert
-        assertEquals(returnDate, borrowEntry.getReturnDate());
+        assertEquals(returnDate, borrowEntry.getReturnDate().truncatedTo(ChronoUnit.SECONDS));
         assertEquals(BorrowStatus.RETURNED, borrowEntry.getBorrowStatus());
         assertEquals(BigDecimal.ZERO, borrowEntry.getPenaltyAmount());
 
@@ -199,7 +200,7 @@ public class BorrowServiceTest {
     @Test
     void returnBook_whenDueDatePassed_thenReturnResponse() {
         // Arrange
-        LocalDateTime returnDate = LocalDateTime.now();
+        LocalDateTime returnDate = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         long borrowRecordId = 1L;
         Book book = Book.builder()
                 .id(1L)
@@ -232,7 +233,7 @@ public class BorrowServiceTest {
         ReturnBorrowResponse response = borrowService.returnBook(borrowRecordId);
 
         // Assert
-        //assertEquals(returnDate, borrowEntry.getReturnDate()); // TODO : LocalDateTime.now() wont match
+        assertEquals(returnDate, borrowEntry.getReturnDate().truncatedTo(ChronoUnit.SECONDS));
         assertEquals(BorrowStatus.OVERDUE, borrowEntry.getBorrowStatus());
         assertEquals(BigDecimal.valueOf(3), borrowEntry.getPenaltyAmount());
 
