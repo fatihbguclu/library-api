@@ -99,11 +99,11 @@
                         <goals>
                             <goal>report</goal> <!-- testler bittikten sonra coverage raporu oluşturur -->
                         </goals>
-                        <configuration>
-                            <excludes>
-                                <!--<exclude>com/ft/library/config/**</exclude>-->
+                        <!--<configuration>
+                           <excludes>
+                              <exclude>com/ft/library/config/**</exclude>
                             </excludes>
-                        </configuration>
+                        </configuration>-->
                     </execution>
                 </executions>
             </plugin>
