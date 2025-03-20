@@ -82,7 +82,7 @@ public class BorrowControllerTest {
 
         when(borrowService.borrowBook(any(CreateBorrowRequest.class))).thenReturn(borrowEntry);
 
-        mockMvc.perform(post("/v1/borrow")
+        mockMvc.perform(post("/v1/borrows")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -99,7 +99,7 @@ public class BorrowControllerTest {
         when(borrowService.borrowBook(any(CreateBorrowRequest.class)))
                 .thenThrow(new BookNotAvailableException("Book Already Borrowed"));
 
-        mockMvc.perform(post("/v1/borrow")
+        mockMvc.perform(post("/v1/borrows")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
@@ -113,7 +113,7 @@ public class BorrowControllerTest {
         when(borrowService.borrowBook(any(CreateBorrowRequest.class)))
                 .thenThrow(new BookNotAvailableException("Book Stock Not Available"));
 
-        mockMvc.perform(post("/v1/borrow")
+        mockMvc.perform(post("/v1/borrows")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
@@ -127,7 +127,7 @@ public class BorrowControllerTest {
         when(borrowService.borrowBook(any(CreateBorrowRequest.class)))
                 .thenThrow(new BookNotAvailableException("Member Status is Suspended"));
 
-        mockMvc.perform(post("/v1/borrow")
+        mockMvc.perform(post("/v1/borrows")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
@@ -143,7 +143,7 @@ public class BorrowControllerTest {
 
         when(borrowService.returnBook(borrowId)).thenReturn(borrowEntry);
 
-        mockMvc.perform(put("/v1/borrow/return/1"))
+        mockMvc.perform(put("/v1/borrows/return/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("Success"))
                 .andExpect(jsonPath("$.message").value("Success"))
@@ -160,7 +160,7 @@ public class BorrowControllerTest {
 
         when(borrowService.returnBook(borrowId)).thenThrow(new BorrowRecordNotFound("Borrow Record Not Found"));
 
-        mockMvc.perform(put("/v1/borrow/return/1"))
+        mockMvc.perform(put("/v1/borrows/return/1"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value("Error"))
                 .andExpect(jsonPath("$.message").value("Borrow Record Not Found"));
@@ -175,7 +175,7 @@ public class BorrowControllerTest {
 
         when(borrowService.returnBook(borrowId)).thenReturn(borrowEntry);
 
-        mockMvc.perform(put("/v1/borrow/return/1"))
+        mockMvc.perform(put("/v1/borrows/return/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("Success"))
                 .andExpect(jsonPath("$.message").value("Success"))
