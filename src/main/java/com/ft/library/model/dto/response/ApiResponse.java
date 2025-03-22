@@ -5,14 +5,14 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class GenericResponse<T> {
+public class ApiResponse<T> {
 
     private String status;
     private String message;
     private T data;
 
-    public static <T> GenericResponse<T> of(String status, String message, T data) {
-        return GenericResponse.<T>builder()
+    public static <T> ApiResponse<T> of(String status, String message, T data) {
+        return ApiResponse.<T>builder()
                 .status(status)
                 .message(message)
                 .data(data)

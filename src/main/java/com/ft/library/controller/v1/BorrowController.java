@@ -2,7 +2,7 @@ package com.ft.library.controller.v1;
 
 import com.ft.library.model.dto.request.CreateBorrowRequest;
 
-import com.ft.library.model.dto.response.GenericResponse;
+import com.ft.library.model.dto.response.ApiResponse;
 import com.ft.library.model.entity.BorrowEntry;
 import com.ft.library.service.BorrowService;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +17,14 @@ public class BorrowController {
     private final BorrowService borrowService;
 
     @PostMapping
-    public ResponseEntity<GenericResponse<BorrowEntry>> borrowBook(@RequestBody CreateBorrowRequest request) {
+    public ResponseEntity<ApiResponse<BorrowEntry>> borrowBook(@RequestBody CreateBorrowRequest request) {
         BorrowEntry response = borrowService.borrowBook(request);
-        return ResponseEntity.ok(GenericResponse.of("Success", "Success", response));
+        return ResponseEntity.ok(ApiResponse.of("Success", "Success", response));
     }
 
     @PutMapping("/return/{borrowId}")
-    public ResponseEntity<GenericResponse<BorrowEntry>> returnBook(@PathVariable long borrowId) {
+    public ResponseEntity<ApiResponse<BorrowEntry>> returnBook(@PathVariable long borrowId) {
         BorrowEntry response = borrowService.returnBook(borrowId);
-        return ResponseEntity.ok(GenericResponse.of("Success", "Success", response));
+        return ResponseEntity.ok(ApiResponse.of("Success", "Success", response));
     }
 }
