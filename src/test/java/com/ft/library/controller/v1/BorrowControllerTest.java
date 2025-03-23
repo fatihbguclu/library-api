@@ -136,7 +136,7 @@ public class BorrowControllerTest {
     }
 
     @Test
-    void returnBook_whenSuccess_thenReturnReturnBorrowResponse() throws Exception {
+    void returnBook_whenSuccess_thenReturnBorrowResponse() throws Exception {
         long borrowId = 1L;
         borrowEntry.setReturnDate(LocalDateTime.now().plusDays(3));
         borrowEntry.setBorrowStatus(BorrowStatus.RETURNED);
