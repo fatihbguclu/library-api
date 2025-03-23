@@ -245,4 +245,85 @@ public class BorrowServiceTest {
         assertEquals(borrowEntry.getPenaltyAmount(), response.getPenaltyAmount());
     }
 
+    /*
+    @Test
+    void borrowBook_whenValid_thenReturnResponse2() {
+        LocalDateTime borrowDate = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        // Arrange
+        CreateBorrowRequest request = new CreateBorrowRequest(1L, 1L);
+
+        // Act
+        BorrowEntry response = borrowService.borrowBook(request);
+
+        // Assert
+        assertEquals(borrowDate, response.getBorrowDate().truncatedTo(ChronoUnit.SECONDS));
+        assertEquals(borrowDate.plusDays(7).truncatedTo(ChronoUnit.SECONDS), response.getDueDate().truncatedTo(ChronoUnit.SECONDS));
+        assertEquals(BorrowStatus.ACTIVE, response.getBorrowStatus());
+    }*/
+
+    /*
+    @Test
+    void borrowBook_whenValid_thenReturnResponse2() {
+        LocalDateTime borrowDate = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        // Arrange
+        CreateBorrowRequest request = new CreateBorrowRequest(1L, 1L);
+        Book book = Book.builder()
+                .id(1L)
+                .title("Clean Code")
+                .isbn("9780132350884")
+                .author("Robert C. Martin")
+                .quantityAvailable(10)
+                .build();
+
+        when(bookService.getBookById(1L)).thenReturn(book);
+
+        // Act
+        BorrowEntry response = borrowService.borrowBook(request);
+
+        // Assert
+        assertEquals(9, book.getQuantityAvailable());
+
+        assertEquals(borrowDate, response.getBorrowDate().truncatedTo(ChronoUnit.SECONDS));
+        assertEquals(borrowDate.plusDays(7).truncatedTo(ChronoUnit.SECONDS), response.getDueDate().truncatedTo(ChronoUnit.SECONDS));
+        assertEquals(BorrowStatus.ACTIVE, response.getBorrowStatus());
+
+        verify(bookService, times(1)).getBookById(1L);
+    }*/
+
+    /*
+    @Test
+    void borrowBook_whenValid_thenReturnResponse2() {
+        LocalDateTime borrowDate = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        // Arrange
+        CreateBorrowRequest request = new CreateBorrowRequest(1L, 1L);
+        Book book = Book.builder()
+                .id(1L)
+                .title("Clean Code")
+                .isbn("9780132350884")
+                .author("Robert C. Martin")
+                .quantityAvailable(10)
+                .build();
+        Member member = Member.builder()
+                .id(1L)
+                .firstName("Fatih")
+                .lastName("Büyükgüçlü")
+                .email("fatih@gmail.com")
+                .build();
+
+        when(bookService.getBookById(1L)).thenReturn(book);
+        when(memberService.getMemberById(1L)).thenReturn(member);
+
+        // Act
+        BorrowEntry response = borrowService.borrowBook(request);
+
+        // Assert
+        assertEquals(9, book.getQuantityAvailable());
+        assertEquals(borrowDate, response.getBorrowDate().truncatedTo(ChronoUnit.SECONDS));
+        assertEquals(borrowDate.plusDays(7).truncatedTo(ChronoUnit.SECONDS), response.getDueDate().truncatedTo(ChronoUnit.SECONDS));
+        assertEquals(BorrowStatus.ACTIVE, response.getBorrowStatus());
+        verify(bookService, times(1)).getBookById(1L);
+        verify(memberService, times(1)).getMemberById(1L);
+    }
+    */
+
 }

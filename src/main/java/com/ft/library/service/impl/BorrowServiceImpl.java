@@ -83,4 +83,83 @@ public class BorrowServiceImpl implements BorrowService {
         borrowRepository.save(foundBorrowRecord);
         return foundBorrowRecord;
     }
+
+    /*
+    @Override
+    @Transactional
+    public BorrowEntry borrowBook(CreateBorrowRequest request) {
+        LocalDateTime now = LocalDateTime.now();
+        BorrowEntry borrowEntry = BorrowEntry.builder()
+                .borrowDate(now)
+                .dueDate(now.plusDays(7))
+                .returnDate(null)
+                .borrowStatus(BorrowStatus.ACTIVE)
+                .penaltyAmount(BigDecimal.ZERO)
+                .build();
+        borrowRepository.save(borrowEntry);
+        return borrowEntry;
+    }
+    */
+
+    /*
+    @Override
+    @Transactional
+    public BorrowEntry borrowBook(CreateBorrowRequest request) {
+        Book requestedBook = bookService.getBookById(request.getBookId());
+        if (requestedBook.getQuantityAvailable().compareTo(0) <= 0) {
+            throw new BookNotAvailableException("Book Stock Not Available");
+        }
+        requestedBook.setQuantityAvailable(requestedBook.getQuantityAvailable() - 1);
+
+        LocalDateTime now = LocalDateTime.now();
+        BorrowEntry borrowEntry = BorrowEntry.builder()
+                .book(requestedBook)
+                .borrowDate(now)
+                .dueDate(now.plusDays(7))
+                .returnDate(null)
+                .borrowStatus(BorrowStatus.ACTIVE)
+                .penaltyAmount(BigDecimal.ZERO)
+                .build();
+        borrowRepository.save(borrowEntry);
+        return borrowEntry;
+    }
+    */
+
+    /*
+    @Override
+    @Transactional
+    public BorrowEntry borrowBook(CreateBorrowRequest request) {
+        boolean isBookAlreadyBorrowedByMember = borrowRepository.existsBorrowRecordByBookIdAndMemberIdAndBorrowStatus(
+                request.getBookId(), request.getMemberId(), BorrowStatus.ACTIVE
+        );
+        if (isBookAlreadyBorrowedByMember) {
+            throw new BookNotAvailableException("Book is Already Borrowed by Member");
+        }
+
+        Book requestedBook = bookService.getBookById(request.getBookId());
+        if (requestedBook.getQuantityAvailable().compareTo(0) <= 0) {
+            throw new BookNotAvailableException("Book Stock Not Available");
+        }
+
+        Member requesterMember = memberService.getMemberById(request.getMemberId());
+        if (MembershipStatus.SUSPENDED.equals(requesterMember.getMembershipStatus())) {
+            throw new BookNotAvailableException("Member Status is Suspended");
+        }
+
+        requestedBook.setQuantityAvailable(requestedBook.getQuantityAvailable() - 1);
+        LocalDateTime now = LocalDateTime.now();
+        BorrowEntry borrowEntry = BorrowEntry.builder()
+                .book(requestedBook)
+                .member(requesterMember)
+                .borrowDate(now)
+                .dueDate(now.plusDays(7))
+                .returnDate(null)
+                .borrowStatus(BorrowStatus.ACTIVE)
+                .penaltyAmount(BigDecimal.ZERO)
+                .build();
+        borrowRepository.save(borrowEntry);
+        return borrowEntry;
+    }
+    */
+
 }
