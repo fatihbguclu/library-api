@@ -86,7 +86,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void getBookById_WhenBookNotFound_ShouldReturnErrorMessage() throws Exception {
+    void getBookById_whenBookNotFound_shouldReturnErrorMessage() throws Exception {
         when(bookService.getBookById(999L))
                 .thenThrow(new BookNotFoundException("Book not found"));
 
@@ -110,7 +110,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void getBookByIsbn_WhenBookNotFound_ShouldReturnErrorMessage() throws Exception {
+    void getBookByIsbn_whenBookNotFound_shouldReturnErrorMessage() throws Exception {
         when(bookService.getBookByIsbn("fake-isbn")).thenThrow(new BookNotFoundException("Book not found"));
 
         mockMvc.perform(get("/v1/books/isbn/fake-isbn"))
@@ -132,7 +132,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void createBook_WhenServiceThrowException_ShouldReturnErrorMessage() throws Exception {
+    void createBook_whenServiceThrowException_shouldReturnErrorMessage() throws Exception {
         doThrow(new RuntimeException()).when(bookService).createBook(any(CreateBookRequest.class));
 
         mockMvc.perform(post("/v1/books")
@@ -156,7 +156,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void updateBook_WhenBookNotFound_ShouldReturnErrorMessage() throws Exception {
+    void updateBook_whenBookNotFound_shouldReturnErrorMessage() throws Exception {
         doThrow(new BookNotFoundException("Book not found")).when(bookService).updateBook(any(Long.class), any(CreateBookRequest.class));
 
         mockMvc.perform(put("/v1/books/1")
